@@ -1,4 +1,4 @@
-/* Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -2027,6 +2027,7 @@ static int cam_eeprom_read_memory(struct cam_eeprom_ctrl_t *e_ctrl,
 		}
 
 		if (emap[j].mem.valid_size) {
+<<<<<<< HEAD
 			size = emap[j].mem.valid_size;
 			addr = emap[j].mem.addr;
 			memptr = block->mapdata + addr;
@@ -2062,6 +2063,17 @@ static int cam_eeprom_read_memory(struct cam_eeprom_ctrl_t *e_ctrl,
 				size -= read_size;
 				addr += read_size;
 				memptr += read_size;
+=======
+			rc = camera_io_dev_read_seq(&e_ctrl->io_master_info,
+				emap[j].mem.addr, memptr,
+				emap[j].mem.addr_type,
+				emap[j].mem.data_type,
+				emap[j].mem.valid_size);
+			if (rc < 0) {
+				CAM_ERR(CAM_EEPROM, "read failed rc %d",
+					rc);
+				return rc;
+>>>>>>> ce0dab593ffd6a77f786eb71d8167a8ca5b3dcb2
 			}
 		}
 

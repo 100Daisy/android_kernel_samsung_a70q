@@ -3,7 +3,7 @@
  *
  * This code is based on drivers/scsi/ufs/ufshcd.h
  * Copyright (C) 2011-2013 Samsung India Software Operations
- * Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
  *
  * Authors:
  *	Santosh Yaraganavi <santosh.sy@samsung.com>
@@ -382,6 +382,7 @@ struct ufs_hba_variant_ops {
  *						   according to tag parameter
  * @crypto_engine_reset: perform reset to the cryptographic engine
  * @crypto_engine_get_status: get errors status of the cryptographic engine
+ * @crypto_get_req_status: Check if crypto driver still holds request or not
  */
 struct ufs_hba_crypto_variant_ops {
 	int	(*crypto_req_setup)(struct ufs_hba *, struct ufshcd_lrb *lrbp,
@@ -391,6 +392,7 @@ struct ufs_hba_crypto_variant_ops {
 			struct request *);
 	int	(*crypto_engine_reset)(struct ufs_hba *);
 	int	(*crypto_engine_get_status)(struct ufs_hba *, u32 *);
+	int     (*crypto_get_req_status)(struct ufs_hba *);
 };
 
 /**
@@ -1636,7 +1638,6 @@ static inline int ufshcd_vops_crypto_engine_reset(struct ufs_hba *hba)
 
 static inline int ufshcd_vops_crypto_engine_get_status(struct ufs_hba *hba,
 		u32 *status)
-
 {
 	if (hba->var && hba->var->crypto_vops &&
 	    hba->var->crypto_vops->crypto_engine_get_status)
@@ -1660,6 +1661,7 @@ static inline void ufshcd_vops_pm_qos_req_end(struct ufs_hba *hba,
 		hba->var->pm_qos_vops->req_end(hba, req, lock);
 }
 
+<<<<<<< HEAD
 #define UFS_DEV_ATTR(name, fmt, args...)					\
 static ssize_t ufs_##name##_show(struct device *dev, struct device_attribute *attr, char *buf)	\
 {										\
@@ -1668,5 +1670,15 @@ static ssize_t ufs_##name##_show(struct device *dev, struct device_attribute *at
 	return sprintf(buf, fmt, args);						\
 }										\
 static DEVICE_ATTR(name, 0444, ufs_##name##_show, NULL)
+=======
+static inline int ufshcd_vops_crypto_engine_get_req_status(struct ufs_hba *hba)
+
+{
+	if (hba->var && hba->var->crypto_vops &&
+	    hba->var->crypto_vops->crypto_get_req_status)
+		return hba->var->crypto_vops->crypto_get_req_status(hba);
+	return 0;
+}
+>>>>>>> ce0dab593ffd6a77f786eb71d8167a8ca5b3dcb2
 
 #endif /* End of Header */

@@ -61,6 +61,7 @@ struct qg_dt {
 	int			esr_disable_soc;
 	int			esr_min_ibat_ua;
 	int			shutdown_soc_threshold;
+	int			tcss_entry_soc;
 	bool			hold_soc_while_full;
 	bool			linearize_soc;
 	bool			cl_disable;
@@ -68,9 +69,13 @@ struct qg_dt {
 	bool			esr_disable;
 	bool			esr_discharge_enable;
 	bool			qg_ext_sense;
+<<<<<<< HEAD
 #if defined(CONFIG_BATTERY_SAMSUNG_USING_QC)
 	bool			fake_temp;	
 #endif
+=======
+	bool			tcss_enable;
+>>>>>>> ce0dab593ffd6a77f786eb71d8167a8ca5b3dcb2
 };
 
 struct qg_esr_data {
@@ -144,6 +149,7 @@ struct qpnp_qg {
 	bool			dc_present;
 	bool			charge_full;
 	bool			force_soc;
+<<<<<<< HEAD
 #if defined(CONFIG_BATTERY_SAMSUNG_USING_QC)
 #if defined(CONFIG_ENG_BATTERY_CONCEPT)
 	int			batt_test_batt_temp;
@@ -151,6 +157,9 @@ struct qpnp_qg {
 	int			batt_cycle;
 	int			full_condition_soc;
 #endif
+=======
+	bool			tcss_active;
+>>>>>>> ce0dab593ffd6a77f786eb71d8167a8ca5b3dcb2
 	int			charge_status;
 	int			charge_type;
 	int			chg_iterm_ma;
@@ -159,6 +168,12 @@ struct qpnp_qg {
 	int			esr_nominal;
 	int			soh;
 	int			soc_reporting_ready;
+	int			last_fifo_i_ua;
+	int			prev_fifo_i_ua;
+	int			soc_tcss_entry;
+	int			ibat_tcss_entry;
+	int			soc_tcss;
+	int			tcss_entry_count;
 	u32			fifo_done_count;
 	u32			wa_flags;
 	u32			seq_no;

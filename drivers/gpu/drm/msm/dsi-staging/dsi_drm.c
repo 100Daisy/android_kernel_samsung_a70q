@@ -191,14 +191,15 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 		return;
 	}
 
-	SDE_ATRACE_BEGIN("dsi_bridge_pre_enable");
+	SDE_ATRACE_BEGIN("dsi_display_prepare");
 	rc = dsi_display_prepare(c_bridge->display);
 	if (rc) {
 		pr_err("[%d] DSI display prepare failed, rc=%d\n",
 		       c_bridge->id, rc);
-		SDE_ATRACE_END("dsi_bridge_pre_enable");
+		SDE_ATRACE_END("dsi_display_prepare");
 		return;
 	}
+	SDE_ATRACE_END("dsi_display_prepare");
 
 	SDE_ATRACE_BEGIN("dsi_display_enable");
 	rc = dsi_display_enable(c_bridge->display);
@@ -208,7 +209,6 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 		(void)dsi_display_unprepare(c_bridge->display);
 	}
 	SDE_ATRACE_END("dsi_display_enable");
-	SDE_ATRACE_END("dsi_bridge_pre_enable");
 
 	rc = dsi_display_splash_res_cleanup(c_bridge->display);
 	if (rc)
@@ -399,6 +399,7 @@ static bool dsi_bridge_mode_fixup(struct drm_bridge *bridge,
 			(!(dsi_mode.dsi_mode_flags & DSI_MODE_FLAG_VRR)) &&
 			(!(dsi_mode.dsi_mode_flags & DSI_MODE_FLAG_DYN_CLK)) &&
 			(!crtc_state->active_changed ||
+<<<<<<< HEAD
 			 display->is_cont_splash_enabled)) {
 #if defined(CONFIG_DISPLAY_SAMSUNG)
 				 if (display->panel->panel_initialized || display->is_cont_splash_enabled) {
@@ -408,6 +409,19 @@ static bool dsi_bridge_mode_fixup(struct drm_bridge *bridge,
 #else
 				dsi_mode.dsi_mode_flags |= DSI_MODE_FLAG_DMS;
 #endif
+=======
+			 display->is_cont_splash_enabled))
+			dsi_mode.dsi_mode_flags |= DSI_MODE_FLAG_DMS;
+
+		/* Reject seemless transition when active changed. */
+		if (crtc_state->active_changed &&
+			((dsi_mode.dsi_mode_flags & DSI_MODE_FLAG_VRR) ||
+			(dsi_mode.dsi_mode_flags & DSI_MODE_FLAG_DYN_CLK))) {
+			pr_err("seamless upon active changed 0x%x %d\n",
+				dsi_mode.dsi_mode_flags,
+				crtc_state->active_changed);
+			return false;
+>>>>>>> ce0dab593ffd6a77f786eb71d8167a8ca5b3dcb2
 		}
 	}
 
